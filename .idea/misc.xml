@@ -4,4 +4,7 @@
     <option name="sdkName" value="Poetry (healthy habits tracker)" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (healthy habits tracker)" project-jdk-type="Python SDK" />
+  <component name="PyCharmProfessionalAdvertiser">
+    <option name="shown" value="true" />
+  </component>
 </project>
