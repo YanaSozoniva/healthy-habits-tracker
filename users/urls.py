@@ -11,5 +11,5 @@ router = DefaultRouter()
 router.register("", UserViewSet, basename="users")
 
 urlpatterns = [
-    path("")
+    # path("")
 ] + router.urls
