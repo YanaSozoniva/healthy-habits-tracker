@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
 
 from users.models import User
@@ -74,6 +75,7 @@ class Habit(models.Model):
     )
 
     time_to_complete = models.PositiveIntegerField(
+        validators=[MaxValueValidator(120)],
         verbose_name="Время на выполнение в секундах",
         help_text="Укажите время на выполнения полезной привычки",
         null=True,
