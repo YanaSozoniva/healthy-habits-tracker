@@ -4,7 +4,7 @@ from habits.models import Habit
 
 
 class HabitSerializer(serializers.ModelSerializer):
-    """ Сериализатор для модели привычка"""
+    """Сериализатор для модели привычка"""
 
     class Meta:
         model = Habit

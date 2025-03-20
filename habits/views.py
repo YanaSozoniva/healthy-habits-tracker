@@ -1,6 +1,7 @@
 from rest_framework import generics
 
 from habits.models import Habit
+from habits.pagination import CustomPagination
 from habits.serializers import HabitSerializer
 
 
@@ -16,6 +17,7 @@ class HabitCreateAPIView(generics.CreateAPIView):
 class HabitListAPIView(generics.ListAPIView):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
+    pagination_class = CustomPagination
 
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):

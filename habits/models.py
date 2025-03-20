@@ -4,7 +4,7 @@ from users.models import User
 
 
 class Habit(models.Model):
-    """ Модель Привычка """
+    """Модель Привычка"""
 
     DAILY = "daily"
     ONCE_WEEK = "once_week"
@@ -25,11 +25,7 @@ class Habit(models.Model):
     ]
 
     place = models.CharField(
-        max_length=150,
-        verbose_name="Место",
-        help_text="Укажите место выполнения привычки",
-        null=True,
-        blank=True
+        max_length=150, verbose_name="Место", help_text="Укажите место выполнения привычки", null=True, blank=True
     )
 
     name = models.CharField(
@@ -38,26 +34,17 @@ class Habit(models.Model):
         help_text="Укажите название привычки",
     )
 
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='habits',
-        null=True,
-        blank=True
-    )
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="habits", null=True, blank=True)
 
     action = models.TextField(
         verbose_name="Действие",
         help_text="Укажите действие, которое представляет собой привычка",
         null=True,
-        blank=True
+        blank=True,
     )
 
     lead_time = models.DateTimeField(
-        verbose_name="Время",
-        help_text="Укажите в какое время планируется выполнять привычку",
-        null=True,
-        blank=True
+        verbose_name="Время", help_text="Укажите в какое время планируется выполнять привычку", null=True, blank=True
     )
 
     associated_habit = models.ForeignKey(
@@ -66,7 +53,7 @@ class Habit(models.Model):
         verbose_name="Связанная привычка",
         help_text="Укажите связанную привычку",
         null=True,
-        blank=True
+        blank=True,
     )
 
     is_nice_habit = models.BooleanField(
@@ -75,10 +62,7 @@ class Habit(models.Model):
     )
 
     periodicity = models.CharField(
-        max_length=20,
-        choices=PERIODICITY_CHOICES,
-        default=DAILY,
-        verbose_name='Периодичность'
+        max_length=20, choices=PERIODICITY_CHOICES, default=DAILY, verbose_name="Периодичность"
     )
 
     reward = models.CharField(
@@ -86,14 +70,14 @@ class Habit(models.Model):
         verbose_name="Вознаграждение",
         help_text="Чем Вы хотите себя порадовать?",
         null=True,
-        blank=True
+        blank=True,
     )
 
     time_to_complete = models.PositiveIntegerField(
         verbose_name="Время на выполнение в секундах",
         help_text="Укажите время на выполнения полезной привычки",
         null=True,
-        blank=True
+        blank=True,
     )
 
     is_public = models.BooleanField(
