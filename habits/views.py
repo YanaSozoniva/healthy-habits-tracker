@@ -29,11 +29,11 @@ class HabitListAPIView(generics.ListAPIView):
     permission_classes = (IsAuthenticated, IsOwner,)
 
 
-# class PablicHabitsListAPIView(generics.ListAPIView):
-#     serializer_class = HabitSerializer
-#     queryset = Habit.objects.all()
-#     pagination_class = CustomPagination
-#     permission_classes = (IsAuthenticated)
+class PublicHabitsListAPIView(generics.ListAPIView):
+    serializer_class = HabitSerializer
+    queryset = Habit.objects.filter(is_public=True)
+    pagination_class = CustomPagination
+    permission_classes = (IsAuthenticated,)
 
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
