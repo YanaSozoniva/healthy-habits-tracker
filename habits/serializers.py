@@ -16,3 +16,16 @@ class HabitSerializer(serializers.ModelSerializer):
             associated_habit_or_reward_validator,
             is_nice_habit_validator,
         )
+
+
+class PublicHabitsSerializer(serializers.ModelSerializer):
+    """Сериализатор для вывода публичных привычек привычка"""
+
+    class Meta:
+        model = Habit
+        fields = "__all__"
+        validators = (
+            associated_habit_is_nice_habit_validator,
+            associated_habit_or_reward_validator,
+            is_nice_habit_validator,
+        )
