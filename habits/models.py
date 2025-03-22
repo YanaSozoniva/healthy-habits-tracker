@@ -44,7 +44,7 @@ class Habit(models.Model):
         blank=True,
     )
 
-    lead_time = models.DateTimeField(
+    lead_time = models.TimeField(
         verbose_name="Время", help_text="Укажите в какое время планируется выполнять привычку", null=True, blank=True
     )
 

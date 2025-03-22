@@ -23,6 +23,8 @@ drf-yasg = "^1.21.10"
 celery = "^5.4.0"
 redis = "^5.2.1"
 eventlet = "^0.39.1"
+django-celery-beat = "^2.7.0"
+requests = "^2.32.3"
 
 
 [build-system]
