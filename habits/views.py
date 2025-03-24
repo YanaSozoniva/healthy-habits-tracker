@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django_filters import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
@@ -16,6 +17,7 @@ class HabitCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         habit = serializer.save()
         habit.owner = self.request.user
+        habit.date_last_execution = timezone.now().date()
         habit.save()
 
 

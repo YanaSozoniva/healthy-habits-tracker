@@ -1,4 +1,4 @@
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from users.models import User
@@ -7,23 +7,13 @@ from users.models import User
 class Habit(models.Model):
     """Модель Привычка"""
 
-    DAILY = "daily"
-    ONCE_WEEK = "once_week"
-    TWICE_WEEK = "twice_week"
-    THREE_WEEK = "three_week"
-    FOUR_WEEK = "four_week"
-    FIVE_WEEK = "five_week"
-    SIX_WEEK = "six_week"
-
-    PERIODICITY_CHOICES = [
-        (DAILY, "Ежедневно"),
-        (ONCE_WEEK, "1 раз в неделю"),
-        (TWICE_WEEK, "2 раза в неделю"),
-        (THREE_WEEK, "3 раза в неделю"),
-        (FOUR_WEEK, "4 раза в неделю"),
-        (FIVE_WEEK, "5 раз в неделю"),
-        (SIX_WEEK, "6 раз в неделю"),
-    ]
+    periodicity = models.PositiveIntegerField(
+        validators=[MaxValueValidator(7), MinValueValidator(1)], default=1, verbose_name="Периодичность",
+        help_text="Выберите через сколько дней будите выполнять полезную привычку (1-7)"
+    )
+    date_last_execution = models.DateField(
+        verbose_name="Дата последнего выполнения полезной привычки", null=True, blank=True
+    )
 
     place = models.CharField(
         max_length=150, verbose_name="Место", help_text="Укажите место выполнения привычки", null=True, blank=True
@@ -60,10 +50,6 @@ class Habit(models.Model):
     is_nice_habit = models.BooleanField(
         verbose_name="Признак приятной привычки",
         default=False,
-    )
-
-    periodicity = models.CharField(
-        max_length=20, choices=PERIODICITY_CHOICES, default=DAILY, verbose_name="Периодичность"
     )
 
     reward = models.CharField(
