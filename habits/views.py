@@ -1,6 +1,4 @@
 from django.utils import timezone
-from django_filters import filters
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 
@@ -24,14 +22,17 @@ class HabitCreateAPIView(generics.CreateAPIView):
 class HabitListAPIView(generics.ListAPIView):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
-    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
-    filterset_fields = ["name", "is_nice_habit", "is_public"]
-    ordering_fields = ("name",)
     pagination_class = CustomPagination
     permission_classes = (
         IsAuthenticated,
         IsOwner,
     )
+
+    def get_queryset(self):
+        # Получаем текущего пользователя
+        user = self.request.user
+        # Возвращаем только привычки, принадлежащие этому пользователю
+        return Habit.objects.filter(owner=user)
 
 
 class PublicHabitsListAPIView(generics.ListAPIView):

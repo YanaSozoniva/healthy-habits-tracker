@@ -4,7 +4,7 @@ from habits.models import Habit
 
 
 def associated_habit_or_reward_validator(value):
-    """Валидатор для проверки, что не указаны одновременно связанная привычка и вознаграждение."""
+    """Валидатор для проверки, что нельзя указывать одновременно связанную привычку и вознаграждение."""
 
     associated_habit = dict(value).get("associated_habit")
     reward = dict(value).get("reward")
@@ -21,8 +21,9 @@ def associated_habit_is_nice_habit_validator(value):
     """
 
     associated_habit = dict(value).get("associated_habit")
+    is_nice_habit = dict(value).get("is_nice_habit")
 
-    if associated_habit and not associated_habit.is_nice_habit:
+    if associated_habit and not is_nice_habit:
         raise serializers.ValidationError(
             "В связанные привычки могут попадать только привычки с признаком приятной привычки"
         )

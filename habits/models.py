@@ -8,8 +8,10 @@ class Habit(models.Model):
     """Модель Привычка"""
 
     periodicity = models.PositiveIntegerField(
-        validators=[MaxValueValidator(7), MinValueValidator(1)], default=1, verbose_name="Периодичность",
-        help_text="Выберите через сколько дней будите выполнять полезную привычку (1-7)"
+        validators=[MaxValueValidator(7), MinValueValidator(1)],
+        default=1,
+        verbose_name="Периодичность",
+        help_text="Выберите через сколько дней будите выполнять полезную привычку (1-7)",
     )
     date_last_execution = models.DateField(
         verbose_name="Дата последнего выполнения полезной привычки", null=True, blank=True
