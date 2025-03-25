@@ -6,7 +6,8 @@ from rest_framework.test import APITestCase
 
 from habits.models import Habit
 from habits.serializers import HabitSerializer
-from habits.validators import associated_habit_or_reward_validator, associated_habit_is_nice_habit_validator
+from habits.validators import associated_habit_or_reward_validator, associated_habit_is_nice_habit_validator, \
+    is_nice_habit_validator
 from users.models import User
 
 
@@ -158,6 +159,7 @@ class RewardAndAssociatedValidatorTest(TestCase):
         self.user = User.objects.create(email='test@user.com', password='testpass')
 
     def test_associated_habit_or_reward_validator(self):
+        """ Тестирование проверки валидатора одновременного указания связанной привычки и вознагражения """
         data = {
             'reward': 'Приз',
             'associated_habit': 1
@@ -167,6 +169,7 @@ class RewardAndAssociatedValidatorTest(TestCase):
             associated_habit_or_reward_validator(data)
 
     def test_only_reward(self):
+        """ Тестирование корректной обработки валидатора при указании только вознаграждения """
         data = {
             'reward': 'Reward',
             'associated_habit': None
@@ -177,6 +180,7 @@ class RewardAndAssociatedValidatorTest(TestCase):
             self.fail(f'Validator raised exception unexpectedly: {e}')
 
     def test_associated_habit_is_nice_habit_validator(self):
+        """ Тестирование проверки валидатора связанной привычки, если не указано, что это приятная привычка """
         data = {
             'is_nice_habit': False,
             'associated_habit': 1
@@ -184,3 +188,14 @@ class RewardAndAssociatedValidatorTest(TestCase):
         with self.assertRaisesMessage(Exception,
                                       'В связанные привычки могут попадать только привычки с признаком приятной привычки'):
             associated_habit_is_nice_habit_validator(data)
+
+    def test_is_nice_habit_validator(self):
+        """ Тестирование проверки валидатора, который проверяет, что у приятной привычки нет ни вознаграждения, ни связвнной привычки """
+        data = {
+            'is_nice_habit': True,
+            'reward': 'Reward',
+            'associated_habit': 1
+        }
+        with self.assertRaisesMessage(Exception,
+                                      'У приятной привычки не может быть вознаграждения или связанной привычки'):
+            is_nice_habit_validator(data)
