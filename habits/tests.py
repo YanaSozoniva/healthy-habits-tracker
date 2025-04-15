@@ -1,13 +1,12 @@
 from django.test import TestCase
-
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
 from habits.models import Habit
 from habits.serializers import HabitSerializer
-from habits.validators import associated_habit_or_reward_validator, associated_habit_is_nice_habit_validator, \
-    is_nice_habit_validator
+from habits.validators import (associated_habit_is_nice_habit_validator, associated_habit_or_reward_validator,
+                               is_nice_habit_validator)
 from users.models import User
 
 
@@ -39,7 +38,7 @@ class HabitsTest(APITestCase):
         url = reverse("habits:habit_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json().get('count'), 2)
+        self.assertEqual(response.json().get("count"), 2)
 
     def test_habits_public_list(self):
         """Тестирование вывода списка публичных привычек"""
@@ -60,13 +59,13 @@ class HabitsTest(APITestCase):
             action="Проверка",
             lead_time="09:14:00",
             owner=self.user,
-            is_public=True
+            is_public=True,
         )
         url = reverse("habits:habit_public_list")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json().get('count'), 1)
-        self.assertEqual(response.json().get('results')[0].get('name'), "привычка публичная")
+        self.assertEqual(response.json().get("count"), 1)
+        self.assertEqual(response.json().get("results")[0].get("name"), "привычка публичная")
 
     def test_create_habit(self):
         """Тестирование создания полезной привычки"""
@@ -121,10 +120,10 @@ class HabitsTest(APITestCase):
     class HabitSerializerTest(TestCase):
 
         def setUp(self):
-            self.user = User.objects.create_user(email='test@user.com', password='testpass')
+            self.user = User.objects.create_user(email="test@user.com", password="testpass")
 
         def test_valid_data(self):
-            """ Тестирование сериализатора на валидацию корректных данных """
+            """Тестирование сериализатора на валидацию корректных данных"""
             data = {
                 "date_last_execution": "2025-03-24",
                 "place": "телеграмме",
@@ -135,7 +134,7 @@ class HabitsTest(APITestCase):
             self.assertTrue(serializer.is_valid())
 
         def test_invalid_data(self):
-            """ Тестирование сериализатора на отклонения некорректных данных """
+            """Тестирование сериализатора на отклонения некорректных данных"""
             data = {
                 "date_last_execution": "2025-13-24",
                 "place": "телеграмме",
@@ -156,46 +155,38 @@ class HabitsTest(APITestCase):
 class RewardAndAssociatedValidatorTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create(email='test@user.com', password='testpass')
+        self.user = User.objects.create(email="test@user.com", password="testpass")
 
     def test_associated_habit_or_reward_validator(self):
-        """ Тестирование проверки валидатора одновременного указания связанной привычки и вознагражения """
-        data = {
-            'reward': 'Приз',
-            'associated_habit': 1
-        }
-        with self.assertRaisesMessage(Exception,
-                                      'Нельзя одновременно указывать связанную привычку и вознаграждение. Выберите что-то одно.'):
+        """Тестирование проверки валидатора одновременного указания связанной привычки и вознагражения"""
+        data = {"reward": "Приз", "associated_habit": 1}
+        with self.assertRaisesMessage(
+            Exception, "Нельзя одновременно указывать связанную привычку и вознаграждение. Выберите что-то одно."
+        ):
             associated_habit_or_reward_validator(data)
 
     def test_only_reward(self):
-        """ Тестирование корректной обработки валидатора при указании только вознаграждения """
-        data = {
-            'reward': 'Reward',
-            'associated_habit': None
-        }
+        """Тестирование корректной обработки валидатора при указании только вознаграждения"""
+        data = {"reward": "Reward", "associated_habit": None}
         try:
             associated_habit_or_reward_validator(data)
         except Exception as e:
-            self.fail(f'Validator raised exception unexpectedly: {e}')
+            self.fail(f"Validator raised exception unexpectedly: {e}")
 
     def test_associated_habit_is_nice_habit_validator(self):
-        """ Тестирование проверки валидатора связанной привычки, если не указано, что это приятная привычка """
-        data = {
-            'is_nice_habit': False,
-            'associated_habit': 1
-        }
-        with self.assertRaisesMessage(Exception,
-                                      'В связанные привычки могут попадать только привычки с признаком приятной привычки'):
+        """Тестирование проверки валидатора связанной привычки, если не указано, что это приятная привычка"""
+        data = {"is_nice_habit": False, "associated_habit": 1}
+        with self.assertRaisesMessage(
+            Exception, "В связанные привычки могут попадать только привычки с признаком приятной привычки"
+        ):
             associated_habit_is_nice_habit_validator(data)
 
     def test_is_nice_habit_validator(self):
-        """ Тестирование проверки валидатора, который проверяет, что у приятной привычки нет ни вознаграждения, ни связвнной привычки """
-        data = {
-            'is_nice_habit': True,
-            'reward': 'Reward',
-            'associated_habit': 1
-        }
-        with self.assertRaisesMessage(Exception,
-                                      'У приятной привычки не может быть вознаграждения или связанной привычки'):
+        """
+        Тестирование проверки валидатора, который проверяет, что у приятной привычки нет ни вознаграждения,
+         ни связвнной привычки """
+        data = {"is_nice_habit": True, "reward": "Reward", "associated_habit": 1}
+        with self.assertRaisesMessage(
+            Exception, "У приятной привычки не может быть вознаграждения или связанной привычки"
+        ):
             is_nice_habit_validator(data)
