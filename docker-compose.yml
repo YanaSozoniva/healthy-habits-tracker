@@ -40,6 +40,14 @@ services:
       timeout: 5s
       retries: 5
 
+  migration:
+    build: .
+    command: sh -c "python manage.py migrate"
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+
   redis:
     image: "redis:latest"
     ports:
