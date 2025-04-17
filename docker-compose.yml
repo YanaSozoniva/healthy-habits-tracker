@@ -3,7 +3,7 @@ version: '3.9'
 services:
   web:
     build: .
-    command:  sh -c "python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    command:  sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
       - static_volume:/app/staticfiles
@@ -40,13 +40,13 @@ services:
       timeout: 5s
       retries: 5
 
-  migration:
-    build: .
-    command: sh -c "python manage.py migrate"
-    depends_on:
-      - db
-    env_file:
-      - ./.env
+#  migration:
+#    build: .
+#    command: sh -c "python manage.py migrate"
+#    depends_on:
+#      - db
+#    env_file:
+#      - ./.env
 
   redis:
     image: "redis:latest"
